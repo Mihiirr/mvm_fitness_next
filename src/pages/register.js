@@ -13,8 +13,11 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useForm } from 'react-hook-form';
+import { colors } from '@mui/material';
+import { Context } from '@/context/authContext';
 
 function Copyright(props) {
     return (
@@ -39,21 +42,16 @@ const styles = {
 };
 
 export default function Register() {
-    const navigate = useRouter();
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-
+    const { register, handleSubmit, formState: { errors }, } = useForm({
+        mode: "onChange",
+    });
+    const router = useRouter();
+    const { state, dispatch } = React.useContext(Context);
+    const onSubmit = async (data) => {
         try {
-            // sending data to server.
-            await axios.post("/api/register", {
-                username: data.get('username'),
-                phone: data.get('phone'),
-                email: data.get('email'),
-                password: data.get('password')
-            }).then(async (res) => {
-                await toast.success('🚀 Successfully Registered.', {
+            const response = await axios.post('/api/register', data);
+            if (response.data.message) {
+                toast.error(`🤷🏻‍♂️ ${response.data.message}`, {
                     position: "bottom-left",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -63,22 +61,32 @@ export default function Register() {
                     progress: undefined,
                     theme: "light",
                 });
-                navigate("/signin");
-            }).catch((err) => {
-                toast.error('🤷🏻‍♂️ uh-oh, Somthing went wrong!!!', {
-                    position: "bottom-left",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            });
-
-        } catch (err) {
-            toast.error(err.response.data ? err.response.data.message : '🤷🏻‍♂️ uh-oh, Somthing went wrong!!!', {
+            } else {
+                const toastFunction = async () => {
+                    const { token } = await response.data;
+                    await localStorage.setItem('auth-token', token);
+                    await dispatch({
+                        type: "LOGGED_IN_USER",
+                        payload: response.data
+                    })
+                    await toast.success('🚀 Successfully registered.', {
+                        position: "bottom-left",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    setTimeout(() => {
+                        router.push("/dashboard")
+                    }, 4000);
+                }
+                await toastFunction();
+            }
+        } catch (error) {
+            toast.error('🤷🏻‍♂️ Somthing went wrong!!!', {
                 position: "bottom-left",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -94,6 +102,17 @@ export default function Register() {
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
                 <CssBaseline />
                 <Grid
                     item
@@ -119,13 +138,14 @@ export default function Register() {
                             alignItems: 'center',
                         }}
                     >
+
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             {/* <LockOutlinedIcon /> */}
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Sign Up
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
@@ -135,11 +155,16 @@ export default function Register() {
                                 name="username"
                                 autoComplete="username"
                                 placeholder='Enter username'
+                                {...register("username", {
+                                    required: "This field is required",
+                                })}
                                 autoFocus
                             />
+                            {errors.username && (
+                                <span style={{ color: "red" }}>This field is required</span>
+                            )}
                             <TextField
                                 margin="normal"
-                                required
                                 fullWidth
                                 id="phone"
                                 label="Phone Number"
@@ -154,7 +179,16 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                {...register("email", {
+                                    required: "This field is required",
+                                    pattern: {
+                                        value:
+                                            /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                                        message: "Please Enter a valid Email",
+                                    },
+                                })}
                             />
+                            {errors.email && <span style={{ color: "red" }}>This field is required</span>}
                             <TextField
                                 margin="normal"
                                 required
@@ -164,11 +198,19 @@ export default function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                {...register("password", {
+                                    required: true,
+                                    pattern: {
+                                        value:
+                                            /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+                                        message:
+                                            "Password must be contain UpperCase, LowerCase, Number/special Charecter and min 8 charecters",
+                                    },
+                                })}
                             />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
+                            {errors.password && (
+                                <span style={{ color: "red" }}>This field is required</span>
+                            )}
                             <Button
                                 type="submit"
                                 fullWidth

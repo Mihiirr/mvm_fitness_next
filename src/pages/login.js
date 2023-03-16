@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +15,8 @@ import axios from "axios";
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useForm } from 'react-hook-form';
+import { Context } from '@/context/authContext';
 
 function Copyright(props) {
     return (
@@ -32,19 +34,17 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
-    const navigate = useRouter();
+    const { register, handleSubmit, formState: { errors }, } = useForm({
+        mode: "onChange",
+    });
+    const { dispatch } = useContext(Context);
+    const router = useRouter();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-
+    const onSubmit = async (data) => {
         try {
-            axios.post("/api/login", {
-                email: data.get('email'),
-                password: data.get('password'),
-            }).then(async (res) => {
-                await localStorage.setItem("auth-token", res.data);
-                await toast.success('🚀 Welcome.', {
+            const response = await axios.post('/api/login', data);
+            if (response.data.message) {
+                toast.error(`🤷🏻‍♂️ ${response.data.message}`, {
                     position: "bottom-left",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -54,21 +54,32 @@ export default function Login() {
                     progress: undefined,
                     theme: "light",
                 });
-                navigate("/home")
-            }).catch((err) => {
-                toast.error('🤷🏻‍♂️ Uh oh! Email or Password is incorrect!!!', {
-                    position: "bottom-left",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            });
-        } catch (err) {
-            toast.error("🙅‍♀️ Uh oh! Somthing went wrong!!", {
+            } else {
+                const toastFunction = async () => {
+                    const { token } = await response.data;
+                    await localStorage.setItem('auth-token', token);
+                    await dispatch({
+                        type: "LOGGED_IN_USER",
+                        payload: response.data
+                    })
+                    await toast.success('🚀 Welcome.', {
+                        position: "bottom-left",
+                        autoClose: 2500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    setTimeout(() => {
+                        router.push("/dashboard")
+                    }, 3500);
+                }
+                await toastFunction();
+            }
+        } catch (error) {
+            toast.error('🤷🏻‍♂️ Somthing went wrong!!!', {
                 position: "bottom-left",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -76,10 +87,9 @@ export default function Login() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
+                theme: "light",
             });
         }
-
-
     };
 
     return (
@@ -111,15 +121,18 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         Sign In
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username_email"
+                            label="Username/Email"
+                            name="username_email"
+                            autoComplete="username_email"
+                            {...register("username_email", {
+                                required: "This field is required"
+                            })}
                         />
                         <TextField
                             margin="normal"
@@ -130,7 +143,13 @@ export default function Login() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            {...register("password", {
+                                required: true,
+                            })}
                         />
+                        {errors.password && (
+                            <span>This field is required</span>
+                        )}
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
