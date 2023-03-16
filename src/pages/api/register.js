@@ -9,7 +9,7 @@ const handler = nc();
 handler.post(async (req, res) => {
     try {
         await db.connect();
-        const { username, email, password } = req.body;
+        const { username, phone, email, password } = req.body;
 
         // Check if the email/username is already in the database.
         const emailExists = await User.findOne({ email });
@@ -25,9 +25,9 @@ handler.post(async (req, res) => {
         // Creating new user.
         const newUser = new User({
             username,
+            phone,
             email,
             password: hashedPassword,
-            isAdmin: false,
         });
         const user = await newUser.save();
         await db.disconnect();
@@ -36,6 +36,7 @@ handler.post(async (req, res) => {
             token,
             _id: user._id,
             username: user.username,
+            phone: user.phone,
             email: user.email,
             isAdmin: user.isAdmin,
         });
