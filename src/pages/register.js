@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -16,12 +14,10 @@ import { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
-import { colors } from '@mui/material';
-import { Context } from '@/context/authContext';
 
 function Copyright(props) {
     return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        <Typography variant="body2" color="whitesmoke" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
                 Your Website
@@ -46,12 +42,11 @@ export default function Register() {
         mode: "onChange",
     });
     const router = useRouter();
-    const { state, dispatch } = React.useContext(Context);
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post('/api/register', data);
-            if (response.data.message) {
-                toast.error(`🤷🏻‍♂️ ${response.data.message}`, {
+            const response = axios.post('/api/register', data);
+            if ((await response).data.message) {
+                toast.error(`🤷🏻‍♂️ ${(await response).data.message}`, {
                     position: "bottom-left",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -63,12 +58,6 @@ export default function Register() {
                 });
             } else {
                 const toastFunction = async () => {
-                    const { token } = await response.data;
-                    await localStorage.setItem('auth-token', token);
-                    await dispatch({
-                        type: "LOGGED_IN_USER",
-                        payload: response.data
-                    })
                     await toast.success('🚀 Successfully registered.', {
                         position: "bottom-left",
                         autoClose: 3000,
@@ -170,6 +159,7 @@ export default function Register() {
                                 label="Phone Number"
                                 name="phone"
                                 autoComplete="phone"
+                                {...register("phone")}
                             />
                             <TextField
                                 margin="normal"

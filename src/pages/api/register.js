@@ -1,19 +1,18 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
-import User from '../../models/user';
-import db from '../../utils/mongoConection'
-import { signToken } from '../../utils/auth';
+import { connectToDatabase } from '../../utils/mongoConection';
 
 const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        await db.connect();
+        const { db } = await connectToDatabase();
+        // const data = db.collection("users").find({});
         const { username, phone, email, password } = req.body;
 
         // Check if the email/username is already in the database.
-        const emailExists = await User.findOne({ email });
-        const usernameExists = await User.findOne({ username });
+        const emailExists = await db.collection("users").findOne({ email });
+        const usernameExists = await db.collection("users").findOne({ username });
         if (emailExists && usernameExists) return res.json({ message: "Email/Username already exists!!!", description: "Try using different Email and Username." })
         if (emailExists) return res.json({ message: "Email already exists", description: "Try using different Email." });
         if (usernameExists) return res.json({ message: "Username already exists", description: "Try using different Username." });
@@ -23,23 +22,8 @@ handler.post(async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Creating new user.
-        const newUser = new User({
-            username,
-            phone,
-            email,
-            password: hashedPassword,
-        });
-        const user = await newUser.save();
-        await db.disconnect();
-        const token = signToken(user);
-        res.send({
-            token,
-            _id: user._id,
-            username: user.username,
-            phone: user.phone,
-            email: user.email,
-            isAdmin: user.isAdmin,
-        });
+        const data = await db.collection("users").insertOne({ username, phone, email, password: hashedPassword, isAdmin: false });
+        res.send(JSON.parse(JSON.stringify(data.insertedId)));
     } catch (err) {
         console.log(err);
         return res.status(400).send("Error. Try again.");

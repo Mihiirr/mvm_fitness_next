@@ -1,35 +1,33 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
-import User from '../../models/user';
-import db from '../../utils/mongoConection'
+import { connectToDatabase } from '../../utils/mongoConection'
 import { signToken } from '../../utils/auth';
 
 const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        await db.connect();
+        const { db } = await connectToDatabase();
         const { username_email, password } = req.body;
-        const queryUsername_email = "^" + username_email + "$";
-
         // Check if username or email exists --> Check if password is correct --> Create jwt token --> Send token to header
-        const userExists = await User.findOne({
-            username: { $regex: queryUsername_email, $options: "i" },
+        const userExists = await db.collection("users").findOne({
+            username: username_email
         });
         if (!userExists) {
-            const emailExists = await User.findOne({
-                email: { $regex: queryUsername_email, $options: "i" },
+            const emailExists = await db.collection("users").findOne({
+                email: username_email,
             });
             if (!emailExists) {
                 return res.json({ message: "Username/Email not found", description: "Try using different Username/Email." });
             } else {
                 const validPass = await bcrypt.compare(password, emailExists.password);
                 if (!validPass) return res.json({ message: "Invalid password" });
-                const token = signToken(emailExists);
+                const token = signToken(JSON.parse(JSON.stringify(emailExists)));
                 res.send({
                     token,
                     _id: emailExists._id,
                     username: emailExists.username,
+                    phone: emailExists.phone,
                     email: emailExists.email,
                     isAdmin: emailExists.isAdmin,
                 });
@@ -37,11 +35,12 @@ handler.post(async (req, res) => {
         } else {
             const validPass = await bcrypt.compare(password, userExists.password);
             if (!validPass) return res.json({ message: "Invalid password" });
-            const token = signToken(userExists);
+            const token = signToken(JSON.parse(JSON.stringify(userExists)));
             res.send({
                 token,
                 _id: userExists._id,
                 username: userExists.username,
+                phone: userExists.phone,
                 email: userExists.email,
                 isAdmin: userExists.isAdmin,
             });
