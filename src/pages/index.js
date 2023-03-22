@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
-import { IconButton, Collapse } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link as Scroll } from 'react-scroll';
 import ImageCardLanding from "../components/ImageCardLanding"
-import useWindowPosition from '../hooks/useWindowPosition';
 import Header from '../components/Header';
 import Footer from "../components/Footer";
 import customStyles from "../styles/Home.module.css"
+import clientPromise from '../../lib/mongodb';
 
 const useStyles = makeStyles((theme) => ({
   card_root: {
@@ -39,7 +38,7 @@ const places = [
   },
 ];
 
-export default function Landing() {
+export default function Landing({ isConnected }) {
   // const checkedcard = useWindowPosition('header');
   return (
     <div className={customStyles.landing_root}>
@@ -71,4 +70,21 @@ export default function Landing() {
       <Footer />
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  try {
+    await clientPromise;
+
+    const client = await clientPromise;
+    const db = client.db("mvm_fitness_next");
+    return {
+      props: { isConnected: true }
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      props: { isConnected: false }
+    }
+  }
 }

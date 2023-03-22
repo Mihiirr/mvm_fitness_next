@@ -1,13 +1,15 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
-import { connectToDatabase } from '../../utils/mongoConection'
 import { signToken } from '../../utils/auth';
+import clientPromise from '../../../lib/mongodb';
 
 const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        const { db } = await connectToDatabase();
+        // const { db } = await connectToDatabase();
+        const client = await clientPromise;
+        const db = await client.db("mvm_fitness_next");
         const { username_email, password } = req.body;
         // Check if username or email exists --> Check if password is correct --> Create jwt token --> Send token to header
         const userExists = await db.collection("users").findOne({

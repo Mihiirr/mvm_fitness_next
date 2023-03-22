@@ -69,7 +69,7 @@ export default function Register() {
                         theme: "light",
                     });
                     setTimeout(() => {
-                        router.push("/dashboard")
+                        router.push("/login")
                     }, 4000);
                 }
                 await toastFunction();
