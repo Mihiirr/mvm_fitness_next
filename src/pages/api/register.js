@@ -1,13 +1,13 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
-import { connectToDatabase } from '../../utils/mongoConection';
+import clientPromise from '../../../lib/mongodb';
 
 const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        const { db } = await connectToDatabase();
-        // const data = db.collection("users").find({});
+        const client = await clientPromise;
+        const db = client.db("mvm_fitness_next");
         const { username, phone, email, password } = req.body;
 
         // Check if the email/username is already in the database.
