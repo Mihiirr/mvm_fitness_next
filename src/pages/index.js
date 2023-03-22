@@ -39,8 +39,6 @@ const places = [
 ];
 
 export default function Landing({ isConnected, users }) {
-  // const checkedcard = useWindowPosition('header');
-  console.log({ users })
   return (
     <div className={customStyles.landing_root}>
       <div className={customStyles.landing_container2}>

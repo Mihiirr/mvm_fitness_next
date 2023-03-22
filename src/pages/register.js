@@ -44,7 +44,7 @@ export default function Register() {
     const router = useRouter();
     const onSubmit = async (data) => {
         try {
-            const response = axios.post('/api/register', data).catch(err => console.log(err.response));
+            const response = axios.post('/api/register', data);
             if ((await response).data.message) {
                 toast.error(`🤷🏻‍♂️ ${(await response).data.message}`, {
                     position: "bottom-left",
@@ -75,7 +75,7 @@ export default function Register() {
                 await toastFunction();
             }
         } catch (error) {
-            toast.error(`🤷🏻‍♂️ Somthing went wrong!!! ${error}`, {
+            toast.error(`🤷🏻‍♂️ Somthing went wrong!!!`, {
                 position: "bottom-left",
                 autoClose: 3000,
                 hideProgressBar: false,
