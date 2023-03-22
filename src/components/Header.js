@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Button, Toolbar } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import customStyles from "../styles/Home.module.css"
+import { Context } from '@/context/authContext';
 
 const navItems = [
     {
@@ -20,21 +21,22 @@ const navItems = [
 
 const Header = () => {
     const [IsLoggedin, setIsLoggedin] = useState(false);
-    const token = true
+    const { state, dispatch } = useContext(Context);
     useEffect(() => {
-
-        const checkUser = () => {
-            if (token) {
-                setIsLoggedin(true)
-            } else {
-                setIsLoggedin(false)
-            }
+        const token = localStorage.getItem("auth-token");
+        if (!token) {
+            setIsLoggedin(false);
+        } else {
+            setIsLoggedin(true);
         }
-        checkUser();
-    }, [token])
+    }, [])
 
-    const logout = () => {
-        localStorage.removeItem("auth-token");
+    const logout = async () => {
+        await localStorage.removeItem("auth-token");
+        await dispatch({
+            type: "LOGGED_IN_USER",
+            payload: {}
+        });
     }
 
     return (
@@ -53,7 +55,7 @@ const Header = () => {
                     </Box>
                 )}
                 {IsLoggedin ?
-                    <Button variant='contained' color='success' onClick={logout} href='/'>SIGN Out</Button> : <Button variant='contained' color='success' href='/signin'>SIGN IN</Button>}
+                    <Button variant='contained' color='success' onClick={logout} href='/'>SIGN Out</Button> : <Button variant='contained' color='success' href='/login'>SIGN IN</Button>}
             </Toolbar>
         </AppBar>
     )
