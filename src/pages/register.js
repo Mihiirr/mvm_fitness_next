@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 
 function Copyright(props) {
     return (
-        <Typography variant="body2" color="whitesmoke" align="center" {...props}>
+        <Typography variant="body2" color="GrayText" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
                 Your Website
@@ -44,7 +44,15 @@ export default function Register() {
     const router = useRouter();
     const onSubmit = async (data) => {
         try {
-            const response = axios.post('/api/register', data);
+            console.log({ data })
+            const response = fetch('/api/register', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(data),
+            });
             if ((await response).data.message) {
                 toast.error(`🤷🏻‍♂️ ${(await response).data.message}`, {
                     position: "bottom-left",
@@ -57,22 +65,17 @@ export default function Register() {
                     theme: "light",
                 });
             } else {
-                const toastFunction = async () => {
-                    await toast.success('🚀 Successfully registered.', {
-                        position: "bottom-left",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-                    setTimeout(() => {
-                        router.push("/login")
-                    }, 4000);
-                }
-                await toastFunction();
+                toast.success('🚀 Successfully registered.', {
+                    position: "bottom-left",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                router.push("/login")
             }
         } catch (error) {
             toast.error(`🤷🏻‍♂️ Somthing went wrong!!! ${error}`, {
@@ -91,17 +94,6 @@ export default function Register() {
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
-                <ToastContainer
-                    position="top-center"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
                 <CssBaseline />
                 <Grid
                     item
@@ -209,6 +201,7 @@ export default function Register() {
                             >
                                 Sign Up
                             </Button>
+                            <ToastContainer />
                             <Grid container>
                                 <Grid item>
                                     <Link href="/login" variant="body2">

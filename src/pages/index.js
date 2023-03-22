@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link as Scroll } from 'react-scroll';
@@ -8,18 +7,6 @@ import Header from '../components/Header';
 import Footer from "../components/Footer";
 import customStyles from "../styles/Home.module.css"
 import clientPromise from '../../lib/mongodb';
-
-const useStyles = makeStyles((theme) => ({
-  card_root: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-}));
 
 const places = [
   {
@@ -40,7 +27,6 @@ const places = [
 
 export default function Landing({ isConnected, users }) {
   // const checkedcard = useWindowPosition('header');
-  console.log({ users })
   return (
     <div className={customStyles.landing_root}>
       <div className={customStyles.landing_container2}>
@@ -77,9 +63,8 @@ export async function getServerSideProps() {
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGO_DB);
-    const users = await db.collection("users").find({});
     return {
-      props: { isConnected: true, users: JSON.parse(JSON.stringify(users)) }
+      props: { isConnected: true }
     }
   } catch (err) {
     console.log(err)
