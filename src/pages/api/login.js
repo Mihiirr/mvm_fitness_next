@@ -7,9 +7,8 @@ const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        // const { db } = await connectToDatabase();
         const client = await clientPromise;
-        const db = await client.db("mvm_fitness_next");
+        const db = await client.db(process.env.MONGO_DB);
         const { username_email, password } = req.body;
         // Check if username or email exists --> Check if password is correct --> Create jwt token --> Send token to header
         const userExists = await db.collection("users").findOne({

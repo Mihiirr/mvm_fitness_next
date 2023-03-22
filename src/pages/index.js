@@ -76,7 +76,7 @@ export default function Landing({ isConnected, users }) {
 export async function getServerSideProps() {
   try {
     const client = await clientPromise;
-    const db = client.db("mvm_fitness_next");
+    const db = client.db(process.env.MONGO_DB);
     const users = await db.collection("users").find({});
     return {
       props: { isConnected: true, users: JSON.parse(JSON.stringify(users)) }
