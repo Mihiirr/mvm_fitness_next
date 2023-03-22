@@ -1,5 +1,18 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import nc from 'next-connect';
+import clientPromise from "../../../lib/mongodb";
+const handler = nc();
 
-export default function handler(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
+handler.get(async (req, res) => {
+  try {
+    const client = await clientPromise;
+    const db = await client.db("mvm_fitness_next");
+
+    const data = db.collection("users").find({});
+    res.send(JSON.parse(JSON.stringify(data)));
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Error. Try again.");
+  }
+});
+
+export default handler;
