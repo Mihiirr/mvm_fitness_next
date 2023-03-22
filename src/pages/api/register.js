@@ -7,7 +7,7 @@ const handler = nc();
 handler.post(async (req, res) => {
     try {
         const client = await clientPromise;
-        const db = client.db("mvm_fitness_next");
+        const db = client.db(process.env.MONGO_DB);
         const { username, phone, email, password } = req.body;
 
         // Check if the email/username is already in the database.
