@@ -1,12 +1,8 @@
-import { useState, useEffect, useReducer, createContext } from "react";
+import { fetchUserId } from "@/utils/fetchUser";
+import { useReducer, createContext } from "react";
 
 // create context
 const Context = createContext({});
-
-// initial state
-const initialState = {
-    user: {},
-};
 
 function reducer(state, action) {
     switch (action.type) {
@@ -18,8 +14,8 @@ function reducer(state, action) {
 }
 
 // context provider
-const Provider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+const Provider = ({ children, initState }) => {
+    const [state, dispatch] = useReducer(reducer, initState);
     const value = { state, dispatch };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;

@@ -55,28 +55,23 @@ export default function Login() {
                     theme: "light",
                 });
             } else {
-                const toastFunction = async () => {
-                    const { token } = await response.data;
-                    await localStorage.setItem('auth-token', token);
-                    await dispatch({
-                        type: "LOGGED_IN_USER",
-                        payload: response.data
-                    })
-                    await toast.success('🚀 Welcome.', {
-                        position: "bottom-left",
-                        autoClose: 2500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-                    setTimeout(() => {
-                        router.push("/dashboard")
-                    }, 3500);
-                }
-                await toastFunction();
+                const { token } = await response.data;
+                localStorage.setItem('auth-token', token);
+                await dispatch({
+                    type: "LOGGED_IN_USER",
+                    payload: response.data
+                });
+                router.push("/dashboard");
+                toast.success('🚀 Welcome.', {
+                    position: "bottom-left",
+                    autoClose: 2500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             }
         } catch (error) {
             toast.error('🤷🏻‍♂️ Somthing went wrong!!!', {
@@ -95,17 +90,6 @@ export default function Login() {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
-                <ToastContainer
-                    position="top-center"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
                 <CssBaseline />
                 <Box
                     sx={{
@@ -162,6 +146,7 @@ export default function Login() {
                         >
                             Sign In
                         </Button>
+                        <ToastContainer />
                         <Grid container>
                             <Grid item>
                                 <Link href="/register" variant="body2">
