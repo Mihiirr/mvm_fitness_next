@@ -44,7 +44,7 @@ export default function Register() {
     const router = useRouter();
     const onSubmit = async (data) => {
         try {
-            const response = axios.post('/api/register', data);
+            const response = axios.post('/api/register', data).catch(err => console.log(err.response));
             if ((await response).data.message) {
                 toast.error(`🤷🏻‍♂️ ${(await response).data.message}`, {
                     position: "bottom-left",
