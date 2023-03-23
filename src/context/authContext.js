@@ -1,4 +1,3 @@
-import { fetchUserId } from "@/utils/fetchUser";
 import { useReducer, createContext } from "react";
 
 // create context
@@ -8,6 +7,8 @@ function reducer(state, action) {
     switch (action.type) {
         case "LOGGED_IN_USER":
             return { ...state, user: action.payload };
+        case "ALL_EXERCISES":
+            return { ...state, exercises: action.payload };
         default:
             return state;
     }

@@ -55,7 +55,7 @@ const Header = () => {
                     </Box>
                 )}
                 {IsLoggedin ?
-                    <Button variant='contained' color='success' onClick={logout} href='/'>SIGN Out</Button> : <Button variant='contained' color='success' href='/login'>SIGN IN</Button>}
+                    <Button variant='contained' color="inherit" onClick={logout} href='/'>SIGN Out</Button> : <Button variant='contained' color="default" href='/login'>SIGN IN</Button>}
             </Toolbar>
         </AppBar>
     )

@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 
 function Copyright(props) {
     return (
-        <Typography variant="body2" color="GrayText" align="center" {...props}>
+        <Typography variant="body2" color="whitesmoke" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
                 Your Website
@@ -43,42 +43,8 @@ export default function Register() {
     });
     const router = useRouter();
     const onSubmit = async (data) => {
-        try {
-            console.log({ data })
-            const response = fetch('/api/register', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify(data),
-            });
-            if ((await response).data.message) {
-                toast.error(`🤷🏻‍♂️ ${(await response).data.message}`, {
-                    position: "bottom-left",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            } else {
-                toast.success('🚀 Successfully registered.', {
-                    position: "bottom-left",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-                router.push("/login")
-            }
-        } catch (error) {
-            toast.error(`🤷🏻‍♂️ Somthing went wrong!!! ${error}`, {
+        if (data.password !== data.confirmpassword) {
+            toast.error(`🙅🏻‍♂️ Uh oh! Password didn't matched`, {
                 position: "bottom-left",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -88,12 +54,67 @@ export default function Register() {
                 progress: undefined,
                 theme: "light",
             });
+        } else {
+            try {
+                const response = axios.post('/api/register', data);
+                if ((await response).data.message) {
+                    toast.error(`🤷🏻‍♂️ Uh oh! ${(await response).data.message}`, {
+                        position: "bottom-left",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                } else {
+                    const toastFunction = async () => {
+                        await toast.success('🚀 Successfully registered.', {
+                            position: "bottom-left",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                        setTimeout(() => {
+                            router.push("/login")
+                        }, 4000);
+                    }
+                    await toastFunction();
+                }
+            } catch (error) {
+                toast.error(`🤷🏻‍♂️ Somthing went wrong!!!`, {
+                    position: "bottom-left",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
         }
     };
 
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
                 <CssBaseline />
                 <Grid
                     item
@@ -159,6 +180,7 @@ export default function Register() {
                                 fullWidth
                                 id="email"
                                 label="Email Address"
+                                type="email"
                                 name="email"
                                 autoComplete="email"
                                 {...register("email", {
@@ -170,7 +192,7 @@ export default function Register() {
                                     },
                                 })}
                             />
-                            {errors.email && <span style={{ color: "red" }}>This field is required</span>}
+                            {errors.email && <span style={{ color: "red" }}>Please Enter a valid Email</span>}
                             <TextField
                                 margin="normal"
                                 required
@@ -186,12 +208,28 @@ export default function Register() {
                                         value:
                                             /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
                                         message:
-                                            "Password must be contain UpperCase, LowerCase, Number/special Charecter and min 8 charecters",
+                                            "Password must be contain UpperCase, LowerCase, Number/special Character and min 8 charecters",
                                     },
                                 })}
                             />
                             {errors.password && (
-                                <span style={{ color: "red" }}>This field is required</span>
+                                <span style={{ color: "red" }}>Password must be contain UpperCase, LowerCase, Number/special Character and min 8 characters</span>
+                            )}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="confirmpassword"
+                                label="Confirm password"
+                                type="password"
+                                id="confirmpassword"
+                                autoComplete="confirm-password"
+                                {...register("confirmpassword", {
+                                    required: true
+                                })}
+                            />
+                            {errors.confirmpassword && (
+                                <span style={{ color: "red" }}>Please confirm your password</span>
                             )}
                             <Button
                                 type="submit"
@@ -201,7 +239,6 @@ export default function Register() {
                             >
                                 Sign Up
                             </Button>
-                            <ToastContainer />
                             <Grid container>
                                 <Grid item>
                                     <Link href="/login" variant="body2">

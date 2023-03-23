@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
-import Icon2 from "../../public/icons/menu-com.png";
+import customStyles from "@/styles/Home.module.css"
 
 const BodyPart = ({ item, setBodyPart, bodyPart }) => {
   return (
@@ -8,7 +8,7 @@ const BodyPart = ({ item, setBodyPart, bodyPart }) => {
       type="button"
       alignItems="center"
       justifyContent="center"
-      className="bodyPart-card"
+      className={customStyles.bodyPart_card}
       sx={{
 
         borderTop: bodyPart === item ? '4px solid #1E5128' : '',
@@ -25,7 +25,7 @@ const BodyPart = ({ item, setBodyPart, bodyPart }) => {
       }}
 
     >
-      <img src={Icon2} alt="dumbell"
+      <img src="/icons/menu-com.png" alt="dumbell"
         style={{ width: '90px', height: '90px' }} />
       <Typography
         fontSize="24px" fontWeight="bold" color="#425F57"

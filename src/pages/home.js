@@ -1,51 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography, Button, Pagination } from '@mui/material';
-import HeroBanner2 from '../../public/gym_11.jpg';
 import SearchExercises from '../components/SeachExercises';
-import ExerciseCard from '@/components/ExerciseCard';
+import ExerciseCard from "../components/ExerciseCard";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
 import { exerciseOptions, fetchData } from '../utils/fetchData';
+import customStyles from "@/styles/Home.module.css"
 
 const Home = () => {
-    // const navigate = useRouter();
+    const navigate = useRouter();
 
-    // const [bodyPart, setBodyPart] = useState("all");
-    // const [exercises, setExercises] = useState([]);
+    const [bodyPart, setBodyPart] = useState("all");
+    const [exercises, setExercises] = useState([]);
 
-    // const [currentPage, setCurrentPage] = useState(1);
-    // const exercisesPerPage = 9;
-    // const indexOfLastExercise = currentPage * exercisesPerPage;
-    // const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
-    // const CurrentExercises = exercises.slice(indexOfFirstExercise, indexOfLastExercise);
-    // const paginate = (e, value) => {
-    //     setCurrentPage(value);
-    //     window.scrollTo({ top: 1800, behavior: 'smooth' });
-    // }
+    const [currentPage, setCurrentPage] = useState(1);
+    const exercisesPerPage = 9;
+    const indexOfLastExercise = currentPage * exercisesPerPage;
+    const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
+    const isArray = Array.isArray(exercises);
+    const currentExercises = isArray && exercises.slice(indexOfFirstExercise, indexOfLastExercise);
+    const paginate = (e, value) => {
+        setCurrentPage(value);
+        window.scrollTo({ top: 1800, behavior: 'smooth' });
+    }
 
-    // useEffect(() => {
-    //     const checkUser = () => {
-    //         if (!localStorage.getItem("auth-token")) {
-    //             navigate.push("/");
-    //         }
-    //     };
-    //     const fetchExercisesData = async () => {
-    //         let exercisesData = [];
-    //         if (bodyPart === 'all') {
-    //             exercisesData = await fetchData
-    //                 ('https://exercisedb.p.rapidapi.com/exercises',
-    //                     exerciseOptions);
-    //         } else {
-    //             exercisesData = await fetchData
-    //                 (`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`,
-    //                     exerciseOptions);
-    //         }
-    //         setExercises(exercisesData);
-    //     }
-    //     checkUser();
-    //     fetchExercisesData();
-    // }, [navigate, bodyPart]);
+    useEffect(() => {
+        const checkUser = () => {
+            if (!localStorage.getItem("auth-token")) {
+                navigate.push("/");
+            }
+        };
+        const fetchExercisesData = async () => {
+            let exercisesData = [];
+            if (bodyPart === 'all') {
+                exercisesData = await fetchData
+                    ('https://exercisedb.p.rapidapi.com/exercises',
+                        exerciseOptions);
+            } else {
+                exercisesData = await fetchData
+                    (`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`,
+                        exerciseOptions);
+            }
+            setExercises(exercisesData);
+            console.log({ exercisesData })
+        }
+        checkUser();
+        fetchExercisesData();
+    }, [navigate, bodyPart]);
     return (
         <Box>
             <Header />
@@ -77,13 +79,13 @@ const Home = () => {
                     Exercise
                 </Typography>
                 <img src="/gym_11.jpg" height="800px" alt="banner"
-                    className="hero-banner-img"
+                    className={customStyles.hero_banner_img}
                 />
             </Box>
-            {/* <SearchExercises
+            <SearchExercises
                 setExercises={setExercises}
                 bodyPart={bodyPart}
-                setBodyPart={setBodyPart} /> */}
+                setBodyPart={setBodyPart} />
 
             {/* Exercises */}
             <Box id="exercises"
@@ -95,14 +97,21 @@ const Home = () => {
                 <Typography variant="h3" mb="46px">
                     Showing Results
                 </Typography>
-                <Stack direction="row" sx={{ gap: { lg: '110px', xs: '50px' } }}
-                    flexWrap="wrap" justifyContent="center"
-                >
-                    {/* {CurrentExercises.map((exercise, index) => (
-                        <ExerciseCard key={index} exercise={exercise} />
-                    ))} */}
-                </Stack>
-                {/* <Stack mt="100px" alignItems="center">
+                {isArray ? (
+                    <Stack direction="row" sx={{ gap: { lg: '110px', xs: '50px' } }}
+                        flexWrap="wrap" justifyContent="center"
+                    >
+
+                        {currentExercises.length === 0 ? <Typography variant="h3" mb="46px">
+                            Showing Results
+                        </Typography> : currentExercises.map((exercise) => (
+                            <ExerciseCard key={exercise.id} exercise={exercise} />
+                        ))}
+                    </Stack>
+                ) : <Typography color="red" variant="h3" mb="46px">
+                    Somthing went wrong while fetching exercises.
+                </Typography>}
+                <Stack mt="100px" alignItems="center">
                     {exercises.length > 9 && (
                         <Pagination
                             color="standard"
@@ -114,7 +123,7 @@ const Home = () => {
                             size="large"
                         />
                     )}
-                </Stack> */}
+                </Stack>
             </Box>
             <Footer />
         </Box>

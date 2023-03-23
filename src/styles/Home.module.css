@@ -110,8 +110,8 @@
 }
 
 /* Home page Styles -----------------------------------------------*/
-.right-arrow,
-.left-arrow {
+.right_arrow,
+.left_arrow {
   cursor: pointer;
   background: transparent;
   outline: none;
@@ -129,26 +129,16 @@
   transition: 0.3s all ease-in-out;
 }
 
-.right-arrow {
+.right_arrow {
   right: 140px;
 }
 
-.right-arrow:hover,
-.left-arrow:hover {
+.right_arrow:hover,
+.left_arrow:hover {
   transform: scale(1.3, 1.3);
 }
 
-.react-horizontal-scrolling-menu--wrapper {
-  width: 100%;
-  display: flex;
-}
-
-.detail-image {
-  width: 729px;
-  height: 742px;
-}
-
-.hero-banner-img {
+.hero_banner_img {
   position: absolute;
   right: 40px;
   top: 0px;
@@ -174,65 +164,42 @@
   transition: 0.3s all ease-in-out;
 }
 
-.exercise-card img {
+.exercise_card img {
   height: 326px;
 }
 
-.bodyPart-card {
+.bodyPart_card {
   transform: scale(1, 1);
   transition: 0.3s all ease-in-out;
 }
 
-.exercise-card:hover,
-.bodyPart-card:hover {
+.exercise_card:hover,
+.bodyPart_card:hover {
   transform: scale(1.1, 1.1);
 }
 
-.search-btn:hover {
+.search_btn:hover {
   color: #ff2625 !important;
   border: 1px solid #ff2625 !important;
 }
 
-.exercise-video {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 387px;
-  height: 381px;
-  text-decoration: none;
-}
-
 @media screen and (max-width: 1200px) {
-  .detail-image {
-    width: 300px;
-    height: 300px;
-  }
-
-  .react-horizontal-scrolling-menu--scroll-container {
-    width: 500px;
-  }
-
   .left-arrow,
   .right-arrow {
     position: static !important;
   }
 
-  .hero-banner-img {
+  .hero_banner_img {
     display: none;
   }
 
-  .exercise-card {
+  .exercise_card {
     width: 320px;
-  }
-
-  .exercise-video {
-    width: 320px;
-    height: 300px;
   }
 }
 
 @media screen and (max-width: 400px) {
-  .exercise-card {
+  .exercise_card {
     width: 180px;
   }
 }

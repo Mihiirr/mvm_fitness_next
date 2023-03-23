@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import { exerciseOptions, fetchData } from '../utils/fetchData';
 import HorizontalScrollbar from './HorizontalScrollbar';
-
+import customStyles from "@/styles/Home.module.css"
 
 const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
   const [search, setSearch] = useState('')
@@ -59,10 +59,10 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
           placeholder="Search Exercises"
           type="text"
         />
-        <Button className="search-btn"
+        <Button className={customStyles.search_btn}
           sx={{
             bgcolor: '#1E5128',
-            color: '#fff',
+            color: '#ffffff',
             textTransform: 'none',
             width: { lg: '175px', xs: '55px' },
             fontSize: { lg: '20px', xs: '14px' },

@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }) {
     fetchUserData()
   }, [Token])
   const rootContextData = { user: User };
-  console.log({ rootContextData })
+  console.log({ rootContextData });
   return (
     <Provider initState={rootContextData}>
       <Component {...pageProps} />

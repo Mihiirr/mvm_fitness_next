@@ -13,7 +13,7 @@ handler.post(async (req, res) => {
         // Check if the email/username is already in the database.
         const emailExists = await db.collection("users").findOne({ email });
         const usernameExists = await db.collection("users").findOne({ username });
-        if (emailExists && usernameExists) return res.json({ message: "Email/Username already exists!!!", description: "Try using different Email and Username." })
+        if (emailExists && usernameExists) return res.json({ message: "Email/Username already exists", description: "Try using different Email and Username." })
         if (emailExists) return res.json({ message: "Email already exists", description: "Try using different Email." });
         if (usernameExists) return res.json({ message: "Username already exists", description: "Try using different Username." });
 
@@ -23,7 +23,7 @@ handler.post(async (req, res) => {
 
         // Creating new user.
         const data = await db.collection("users").insertOne({ username, phone, email, password: hashedPassword, isAdmin: false });
-        res.send(JSON.parse(JSON.stringify(data.insertedId)));
+        res.send(data.insertedId);
     } catch (err) {
         console.log(err);
         return res.status(400).send("Error. Try again.");
