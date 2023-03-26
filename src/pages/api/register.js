@@ -25,8 +25,7 @@ handler.post(async (req, res) => {
         const data = await db.collection("users").insertOne({ username, phone, email, password: hashedPassword, isAdmin: false });
         res.send(data.insertedId);
     } catch (err) {
-        console.log(err);
-        return res.status(400).send("Error. Try again.");
+        return res.status(400).send(`Error. Try again. ${err}`);
     }
 });
 
