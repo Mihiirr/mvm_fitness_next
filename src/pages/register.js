@@ -87,7 +87,7 @@ export default function Register() {
                     await toastFunction();
                 }
             } catch (error) {
-                toast.error(`🤷🏻‍♂️ Somthing went wrong!!!`, {
+                toast.error(`🤷🏻‍♂️ Somthing went wrong! Please try again.`, {
                     position: "bottom-left",
                     autoClose: 3000,
                     hideProgressBar: false,
