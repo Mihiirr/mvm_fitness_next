@@ -78,7 +78,7 @@ const Home = () => {
                 >
                     Exercise
                 </Typography>
-                <img src="/gym_11.jpg" height="800px" alt="banner"
+                <img src="/home_hero.jpg" height="800px" alt="banner"
                     className={customStyles.hero_banner_img}
                 />
             </Box>

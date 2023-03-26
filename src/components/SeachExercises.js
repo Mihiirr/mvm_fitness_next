@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, TextField, Typography } from '@mui/material'
+import { Box, Stack, Typography, CardActionArea } from '@mui/material'
 import { exerciseOptions, fetchData } from '../utils/fetchData';
-import HorizontalScrollbar from './HorizontalScrollbar';
 import customStyles from "@/styles/Home.module.css"
 
-const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
+const SearchExercises = ({ setExercises, setBodyPart }) => {
   const [search, setSearch] = useState('')
 
   const [bodyParts, setBodyParts] = useState([]);
-
+  console.log({ bodyParts })
   useEffect(() => {
     const fetchExercisesData = async () => {
       const bodyPartsData = await fetchData('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', exerciseOptions);
-      setBodyParts(['all', bodyPartsData]);
+      console.log({ bodyPartsData })
+      setBodyParts(['all', ...bodyPartsData]);
     }
     fetchExercisesData();
   }, [])
@@ -43,43 +43,24 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
         Should Know
       </Typography>
       <Box position="relative" mb="72px">
-        <TextField
-          sx={{
-            input: {
-              fontWeight: '700',
-              border: 'none', borderRadius: '4px'
-            },
-            width: { lg: '800px', md: '600px', xs: '300px' },
-            paddingLeft: { xs: '2px' },
-            backgroundColor: '#fff', borderRadius: '30px'
-          }}
-          height="76px"
+        <input
+          type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value.toLowerCase())}
-          placeholder="Search Exercises"
-          type="text"
+          className={customStyles.home_serachbar}
         />
-        <Button className={customStyles.search_btn}
-          sx={{
-            bgcolor: '#1E5128',
-            color: '#ffffff',
-            textTransform: 'none',
-            width: { lg: '175px', xs: '55px' },
-            fontSize: { lg: '20px', xs: '14px' },
-            height: '56px',
-            position: "absolute",
-            right: '0'
-          }}
-          onClick={handleSearch}
-        >
-          Search
-        </Button>
+        <button className={customStyles.home_serachBtn} onClick={handleSearch}>Search</button>
       </Box>
-      <Box sx={{ position: 'relative', width: '100%', p: '20px' }}>
-        <HorizontalScrollbar data={bodyParts}
-          bodyPart={bodyPart} setBodyPart={setBodyPart} isBodyParts
-        />
-      </Box>
+      <div className={customStyles.home_searchbar_excard_container}>
+        {bodyParts.map(item => (
+          <div className={customStyles.home_searchbar_excard} onClick={() => setBodyPart(item)}>
+            <CardActionArea sx={{ display: "flex", flexDirection: "column", height: 300 }}>
+              <img src="/ani_gym.gif" alt="dumbell" height="200px" width="300px" style={{ marginBottom: 20 }} />
+              <h1 className={customStyles.home_searchbar_excard_title}>{item.toUpperCase()}</h1>
+            </CardActionArea>
+          </div>
+        ))}
+      </div>
     </Stack>
   )
 }
