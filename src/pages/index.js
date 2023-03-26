@@ -1,44 +1,34 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link as Scroll } from 'react-scroll';
 import ImageCardLanding from "../components/ImageCardLanding"
 import Header from '../components/Header';
 import Footer from "../components/Footer";
-import customStyles from "../styles/Home.module.css"
+import customStyles from "@/styles/Home.module.css"
 import clientPromise from '../../lib/mongodb';
-
-const useStyles = makeStyles((theme) => ({
-  card_root: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-}));
+import useWindowPosition from '@/hooks/useWindowPosition';
+import { Button } from '@mui/material';
 
 const places = [
   {
-    title: 'Green',
+    title: 'Transform Your Body Today',
     description:
-      "The Maldives are home to some of the world's most ravishing islands, but it's the sea, which truly makes these islands shine. Luminous aquamarine waters with a crystal clarity lap upon these dazzling white shores, which barely peek above the Indian Ocean.",
-    imageUrl: `https://source.unsplash.com/uPrxxLSkovY`,
+      "Our gym offers a variety of exercises that are designed to help you achieve your fitness goals. From weight lifting to cardio, our GIF's and videos will guide you through each step of your fitness journey",
+    imageUrl: `/boy_landing.jpg`,
     time: 1500,
   },
   {
-    title: 'Bora Bora',
+    title: 'Unlock Your Potential',
     description:
-      'Shaped like a giant sombrero, this lush volcanic island stars in countless South Pacific fantasies. The focal point and best asset of this tropical beauty is its ravishing lagoon in technicolor turquoise. Fish, turtles, sharks, and rays swim in the clear waters.',
-    imageUrl: `https://source.unsplash.com/DHsdSeCpjRU`,
+      "Whether you're a beginner or an experienced fitness enthusiast, our gym app has something for everyone. Our state-of-the-art GIF's and videos will help you reach new heights and unleash your full potential",
+    imageUrl: `/girl_landing.jpg`,
     time: 1500,
   },
 ];
 
 export default function Landing({ isConnected, users }) {
+  const checkedcard = useWindowPosition('header');
   return (
     <div className={customStyles.landing_root}>
       <div className={customStyles.landing_container2}>
@@ -61,10 +51,22 @@ export default function Landing({ isConnected, users }) {
           Your browser does not support the video tag. I suggest you upgrade your browser.
         </video>
       </div>
+      {/* Hero Content 2 */}
+      <div className={customStyles.hero_content2}>
+        <div className={customStyles.hero_content2_left}></div>
+        <div className={customStyles.hero_content2_right}>
+          <div className={customStyles.hero_content2_right_text}>
+            <h1>Your Body is a work of art in the gym</h1>
+            <p>we believe that every day is an opportunity to get stronger. Whether you're training for a competition or just looking to improve your overall health and fitness, we have the resources and expertise to help you succeed.</p>
+            <Button href='/register' color="inherit" variant='contained' style={{ marginTop: 20 }}>Sign Up</Button>
+          </div>
+        </div>
+        <img src="/landing_hero2.jpg" className={customStyles.hero_content2_image}></img>
+      </div>
       {/* Cards */}
       <div className={customStyles.card_root} id="place-to-visit">
-        <ImageCardLanding place={places[1]} checked={true} />
-        <ImageCardLanding place={places[0]} checked={true} />
+        <ImageCardLanding place={places[1]} checked={checkedcard} />
+        <ImageCardLanding place={places[0]} checked={checkedcard} />
       </div>
       <Footer />
     </div>
@@ -75,9 +77,8 @@ export async function getServerSideProps() {
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGO_DB);
-    const users = await db.collection("users").find({});
     return {
-      props: { isConnected: true, users: JSON.parse(JSON.stringify(users)) }
+      props: { isConnected: true }
     }
   } catch (err) {
     console.log(err)

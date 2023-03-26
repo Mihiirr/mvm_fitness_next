@@ -13,7 +13,7 @@ handler.post(async (req, res) => {
         // Check if the email/username is already in the database.
         const emailExists = await db.collection("users").findOne({ email });
         const usernameExists = await db.collection("users").findOne({ username });
-        if (emailExists && usernameExists) return res.json({ message: "Email/Username already exists!!!", description: "Try using different Email and Username." })
+        if (emailExists && usernameExists) return res.json({ message: "Email/Username already exists", description: "Try using different Email and Username." })
         if (emailExists) return res.json({ message: "Email already exists", description: "Try using different Email." });
         if (usernameExists) return res.json({ message: "Username already exists", description: "Try using different Username." });
 

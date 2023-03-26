@@ -6,6 +6,7 @@ import customStyle from "@/styles/Home.module.css"
 
 const dashboard = () => {
     const { state } = useContext(Context);
+    console.log({ state })
     const [link, setLink] = useState("dashboard");
     const router = useRouter();
     useEffect(() => {
@@ -14,15 +15,14 @@ const dashboard = () => {
             router.push("/");
         }
     }, [])
-
     return (
-        <>
+        <div>
             <Header />
             <div className={customStyle.dashboard}>
 
                 {/* Sidebar */}
                 <div className={customStyle.sidebar_dashboard}>
-                    <h2 style={{ marginBottom: "30px" }}>Howdy, <span style={{ color: "#646464" }}> {state.user.username}</span></h2>
+                    <h2 style={{ marginBottom: "30px" }}>Howdy, <span style={{ color: "#646464" }}> {state.user?.username}</span></h2>
                     <button onClick={() => setLink("dashboard")} className={link === "dashboard" ? customStyle.sidebar_dashboard_links_active : customStyle.sidebar_dashboard_links}>
                         <p>My Dashboard</p>
                     </button>
@@ -36,9 +36,9 @@ const dashboard = () => {
                     <div className={customStyle.mainContent_dashboard}>
                         <h2 style={{ color: "#646464" }}>DASHBOARD</h2>
                         <div className={customStyle.dashboard_details}>
-                            <p><strong>Username:</strong> {state.user.username}</p>
-                            <p><strong>Email:</strong> {state.user.email}</p>
-                            <p><strong>Phone:</strong> {state.user.phone}</p>
+                            <p><strong>Username:</strong> {state.user?.username}</p>
+                            <p><strong>Email:</strong> {state.user?.email}</p>
+                            <p><strong>Phone:</strong> {state.user?.phone}</p>
                         </div>
                     </div>
                 )}
@@ -48,7 +48,7 @@ const dashboard = () => {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     )
 }
 
