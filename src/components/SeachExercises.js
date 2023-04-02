@@ -7,11 +7,9 @@ const SearchExercises = ({ setExercises, setBodyPart }) => {
   const [search, setSearch] = useState('')
 
   const [bodyParts, setBodyParts] = useState([]);
-  console.log({ bodyParts })
   useEffect(() => {
     const fetchExercisesData = async () => {
       const bodyPartsData = await fetchData('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', exerciseOptions);
-      console.log({ bodyPartsData })
       setBodyParts(['all', ...bodyPartsData]);
     }
     fetchExercisesData();
@@ -48,6 +46,7 @@ const SearchExercises = ({ setExercises, setBodyPart }) => {
           value={search}
           onChange={(e) => setSearch(e.target.value.toLowerCase())}
           className={customStyles.home_serachbar}
+          placeholder="Example: legs"
         />
         <button className={customStyles.home_serachBtn} onClick={handleSearch}>Search</button>
       </Box>

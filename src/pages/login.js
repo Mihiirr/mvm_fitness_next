@@ -17,6 +17,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
 import { Context } from '@/context/authContext';
+import Cookies from "js-cookie"
 
 function Copyright(props) {
     return (
@@ -57,12 +58,13 @@ export default function Login() {
             } else {
                 const toastFunction = async () => {
                     const { token } = await response.data;
-                    await localStorage.setItem('auth-token', token);
+                    localStorage.setItem('auth-token', token);
                     await dispatch({
                         type: "LOGGED_IN_USER",
                         payload: response.data
-                    })
-                    await toast.success('🚀 Welcome.', {
+                    });
+                    Cookies.set("userInfo", JSON.stringify(response.data));
+                    toast.success('🚀 Welcome.', {
                         position: "bottom-left",
                         autoClose: 2500,
                         hideProgressBar: false,

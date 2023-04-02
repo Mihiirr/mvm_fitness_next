@@ -43,13 +43,12 @@ const Home = () => {
                         exerciseOptions);
             }
             setExercises(exercisesData);
-            console.log({ exercisesData })
         }
         checkUser();
         fetchExercisesData();
     }, [navigate, bodyPart]);
     return (
-        <Box>
+        <Box sx={{ paddingTop: 10 }}>
             <Header />
             {/* Hero Banner */}
             <Box sx={{
