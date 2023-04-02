@@ -57,6 +57,7 @@ export default function Register() {
         } else {
             try {
                 const response = axios.post('/api/register', data);
+                console.log({ response })
                 if ((await response).data.message) {
                     toast.error(`🤷🏻‍♂️ Uh oh! ${(await response).data.message}`, {
                         position: "bottom-left",
@@ -172,8 +173,15 @@ export default function Register() {
                                 label="Phone Number"
                                 name="phone"
                                 autoComplete="phone"
-                                {...register("phone")}
+                                {...register("phone", {
+                                    pattern: {
+                                        value:
+                                            /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
+                                        message: "Please Enter a valid phone number",
+                                    },
+                                })}
                             />
+                            {errors.phone && <span style={{ color: "red" }}>Please Enter a valid Phone number</span>}
                             <TextField
                                 margin="normal"
                                 required

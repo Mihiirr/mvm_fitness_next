@@ -1,23 +1,19 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
 import { signToken } from '../../utils/auth';
-import clientPromise from '../../../lib/mongodb';
+import db from '@/utils/mongoConnect';
+import User from '@/models/User';
 
 const handler = nc();
 
 handler.post(async (req, res) => {
     try {
-        const client = await clientPromise;
-        const db = await client.db(process.env.MONGO_DB);
+        await db.connect();
         const { username_email, password } = req.body;
         // Check if username or email exists --> Check if password is correct --> Create jwt token --> Send token to header
-        const userExists = await db.collection("users").findOne({
-            username: username_email
-        });
+        const userExists = await User.findOne({ username: username_email });
         if (!userExists) {
-            const emailExists = await db.collection("users").findOne({
-                email: username_email,
-            });
+            const emailExists = await User.findOne({ email: username_email });
             if (!emailExists) {
                 return res.json({ message: "Username/Email not found", description: "Try using different Username/Email." });
             } else {
@@ -28,8 +24,10 @@ handler.post(async (req, res) => {
                     token,
                     _id: emailExists._id,
                     username: emailExists.username,
-                    phone: emailExists.phone,
                     email: emailExists.email,
+                    phone: emailExists.phone,
+                    height: emailExists.height,
+                    weight: emailExists.weight,
                     isAdmin: emailExists.isAdmin,
                 });
             }
@@ -41,9 +39,11 @@ handler.post(async (req, res) => {
                 token,
                 _id: userExists._id,
                 username: userExists.username,
-                phone: userExists.phone,
                 email: userExists.email,
-                isAdmin: userExists.isAdmin,
+                phone: userExists.phone,
+                height: userExists.height,
+                weight: userExists.weight,
+                isAdmin: userExists.isAdmin
             });
         }
     } catch (err) {

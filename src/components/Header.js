@@ -23,6 +23,7 @@ const navItems = [
 const Header = () => {
     const [IsLoggedin, setIsLoggedin] = useState(false);
     const { state, dispatch } = useContext(Context);
+    console.log({ state })
     useEffect(() => {
         const token = localStorage.getItem("auth-token");
         if (!token) {
@@ -53,6 +54,11 @@ const Header = () => {
                                 {item.name}
                             </Link>
                         ))}
+                        {state.userInfo?.isAdmin && (
+                            <Link style={{ color: "rgb(118 118 118)" }} className={customStyles.links} href="/admin">
+                                Admin Panel
+                            </Link>
+                        )}
                     </Box>
                 )}
                 {IsLoggedin ?

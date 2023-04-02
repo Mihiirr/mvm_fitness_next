@@ -6,7 +6,6 @@ import ImageCardLanding from "../components/ImageCardLanding"
 import Header from '../components/Header';
 import Footer from "../components/Footer";
 import landingStyles from "@/styles/Landing.module.css"
-import clientPromise from '../../lib/mongodb';
 import useWindowPosition from '@/hooks/useWindowPosition';
 import { Button } from '@mui/material';
 
@@ -27,7 +26,7 @@ const places = [
   },
 ];
 
-export default function Landing({ isConnected }) {
+export default function Landing() {
   const checkedcard = useWindowPosition('header');
   return (
     <div className={landingStyles.landing_root}>
@@ -71,19 +70,4 @@ export default function Landing({ isConnected }) {
       <Footer />
     </div>
   );
-}
-
-export async function getServerSideProps() {
-  try {
-    const client = await clientPromise;
-    const db = client.db(process.env.MONGO_DB);
-    return {
-      props: { isConnected: true }
-    }
-  } catch (err) {
-    console.log(err)
-    return {
-      props: { isConnected: false }
-    }
-  }
 }
