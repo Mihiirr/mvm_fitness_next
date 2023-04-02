@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import adminStyles from "@/styles/Admin.module.css";
 import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
 const Admin = () => {
@@ -22,7 +22,7 @@ const Admin = () => {
     const deleteUserHandler = async (id) => {
         try {
             const response = await axios.post('/api/deleteuser', { userId: id });
-            if (response.data.message) {
+            if ((await response).data.message) {
                 toast.error(`🤷🏻‍♂️ Uh oh! ${(await response).data.message}`, {
                     position: "bottom-left",
                     autoClose: 3000,
