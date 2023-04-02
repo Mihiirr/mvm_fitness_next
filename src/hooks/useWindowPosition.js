@@ -7,7 +7,6 @@ export default function useWindowPosition(id) {
 
     isomorphicEffect(() => {
         function updatePosition() {
-            console.log(window.document.getElementById(id));
             const offetSetHeight = window.document.getElementById(id).offsetHeight;
 
             if (window.pageYOffset > offetSetHeight * 0.7) {

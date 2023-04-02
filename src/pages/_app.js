@@ -1,13 +1,11 @@
 import { Provider } from '@/context/authContext'
 import '@/styles/globals.css'
-import { fetchUserId } from '@/utils/fetchUser'
+import { fetchUserInfo } from '@/utils/fetchUser'
 import { useState, useEffect } from 'react'
-import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 export default function App({ Component, pageProps }) {
   const [User, setUser] = useState({});
-  const [Token, setToken] = useState()
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -17,21 +15,18 @@ export default function App({ Component, pageProps }) {
     }
     const fetchUserData = async () => {
       if (typeof window !== 'undefined') {
-        await setToken(localStorage.getItem("auth-token"));
-        const userInfo = await fetchUserId(Token);
+        const token = localStorage.getItem("auth-token");
+        const userInfo = await fetchUserInfo(token);
         setUser(userInfo);
       }
     }
-    fetchUserData()
-  }, [Token])
+    fetchUserData();
+  }, [])
   const rootContextData = { user: User };
-  console.log({ rootContextData });
   return (
-    <Provider initState={rootContextData}>
-      <ThemeProvider>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider >
+    <Provider>
+      <CssBaseline />
+      <Component {...pageProps} />
     </Provider>
 
   )

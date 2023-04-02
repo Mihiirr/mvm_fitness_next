@@ -1,4 +1,4 @@
-export function fetchUserId(token) {
+export function fetchUserInfo(token) {
     if (!token) { return "Token not available"; }
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace('-', '+').replace('_', '/');

@@ -1,0 +1,36 @@
+.detail_image {
+  width: 729px;
+  height: 742px;
+}
+
+.exercise_video {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 387px;
+  height: 381px;
+  text-decoration: none;
+}
+
+.exdetail_similar_excard_container {
+  height: 500px;
+  width: 100%;
+  padding: 0 40px;
+  white-space: nowrap;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exdetail_similar_excard {
+  height: 100%;
+  width: 300px;
+  border-radius: 8px;
+  margin-right: 200px;
+  display: inline-block;
+}
+
+.exdetail_similar_excard:hover {
+  cursor: pointer;
+}
