@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Button, Toolbar } from '@material-ui/core';
 import Box from '@mui/material/Box';
-import customStyles from "../styles/Home.module.css"
+import customStyles from "@/styles/Home.module.css"
 import { Context } from '@/context/authContext';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const navItems = [
     {
@@ -23,7 +24,7 @@ const navItems = [
 const Header = () => {
     const [IsLoggedin, setIsLoggedin] = useState(false);
     const { state, dispatch } = useContext(Context);
-    console.log({ state })
+    console.log({ state });
     useEffect(() => {
         const token = localStorage.getItem("auth-token");
         if (!token) {
@@ -35,8 +36,9 @@ const Header = () => {
 
     const logout = async () => {
         await localStorage.removeItem("auth-token");
+        await Cookies.remove("userInfo");
         await dispatch({
-            type: "LOGGED_IN_USER",
+            type: "UPDATE_STATE",
             payload: {}
         });
     }

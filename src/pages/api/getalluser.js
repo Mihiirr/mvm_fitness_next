@@ -7,7 +7,7 @@ const handler = nc();
 handler.get(async (req, res) => {
     try {
         await db.connect();
-        const users = await await User.find();
+        const users = await User.find({});
         if (!users) return res.json({ message: "Something went wrong while fetching all users!" });
         await db.disconnect();
         res.send(users);

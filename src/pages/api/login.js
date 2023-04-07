@@ -1,6 +1,6 @@
 import nc from 'next-connect';
 import bcrypt from 'bcryptjs';
-import { signToken } from '../../utils/auth';
+import { signToken } from '@/utils/auth';
 import db from '@/utils/mongoConnect';
 import User from '@/models/User';
 
@@ -26,9 +26,11 @@ handler.post(async (req, res) => {
                     username: emailExists.username,
                     email: emailExists.email,
                     phone: emailExists.phone,
+                    gender: emailExists.gender,
                     height: emailExists.height,
                     weight: emailExists.weight,
                     isAdmin: emailExists.isAdmin,
+                    favourites: emailExists.favourites
                 });
             }
         } else {
@@ -41,9 +43,11 @@ handler.post(async (req, res) => {
                 username: userExists.username,
                 email: userExists.email,
                 phone: userExists.phone,
+                gender: userExists.gender,
                 height: userExists.height,
                 weight: userExists.weight,
-                isAdmin: userExists.isAdmin
+                isAdmin: userExists.isAdmin,
+                favourites: userExists.favourites
             });
         }
     } catch (err) {

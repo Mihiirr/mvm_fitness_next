@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { Collapse } from '@material-ui/core';
-import customStyles from "../styles/Home.module.css"
+import customStyles from "@/styles/Home.module.css"
 
 export default function ImageCard({ place, checked }) {
     return (
