@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Stack, Typography, CardActionArea } from '@mui/material'
-import { exerciseOptions, fetchData } from '../utils/fetchData';
+import { exerciseOptions, fetchData } from '@/utils/fetchData';
 import customStyles from "@/styles/Home.module.css"
 
 const SearchExercises = ({ setExercises, setBodyPart }) => {

@@ -60,7 +60,7 @@ export default function Login() {
                     const { token } = await response.data;
                     localStorage.setItem('auth-token', token);
                     await dispatch({
-                        type: "LOGGED_IN_USER",
+                        type: "UPDATE_STATE",
                         payload: response.data
                     });
                     Cookies.set("userInfo", JSON.stringify(response.data));

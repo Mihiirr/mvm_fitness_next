@@ -6,12 +6,16 @@ import Loader from '@/components/Loader';
 import exDetailStyles from "@/styles/ExDetail.module.css";
 import { Context } from '@/context/authContext';
 import ExerciseCard from '@/components/ExerciseCard';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Cookies from "js-cookie"
 
 const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleExercisesData, equipmentExercisesData }) => {
     const { bodyPart, gifUrl, name, equipment, target } = exerciseDetailData;
     const { state, dispatch } = useContext(Context);
     const favouriteChecker = (id) => {
-        const boolean = state.favourites.some((exerciseDetailId) => exerciseDetailId.id === id);
+        const boolean = state.userInfo?.favourites?.some((exerciseDetailId) => exerciseDetailId.id === id);
         return boolean;
     }
     const extraDetail = [
@@ -28,6 +32,67 @@ const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleEx
             name: equipment,
         }
     ]
+
+    const addToFavourite = async (favourite) => {
+        const favourites = await axios.patch("/api/favourites/addtofav", favourite, {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+            }
+        });
+        console.log({ added: favourites.data })
+        await dispatch({
+            type: "UPDATE_STATE",
+            payload: favourites.data
+        });
+        Cookies.set("userInfo", JSON.stringify(favourites.data));
+        if (favourites.data.message) {
+            toast.error(`🤷🏻‍♂️ ${favourites.data.message}`, {
+                position: "bottom-left",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } else {
+            toast.success('🚀 Successfully added to favourites.', {
+                position: "bottom-left",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
+    const deleteFavItem = async (favourite) => {
+        const favourites = await axios.post("/api/favourites/removefav", { id: favourite.id }, {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+            }
+        });
+        await dispatch({
+            type: "UPDATE_STATE",
+            payload: favourites.data
+        });
+        Cookies.set("userInfo", JSON.stringify(favourites.data));
+        toast.success('🚀 Successfully Removed from favourite.', {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }
+
     return (
         <Box sx={{ paddingTop: 10 }}>
             <Header />
@@ -36,24 +101,29 @@ const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleEx
                 flexDirection: { lg: 'row' },
                 p: '20px', alignItems: 'center'
             }}>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
                 <img src={gifUrl} alt={name} loading="lazy" className={exDetailStyles.detail_image} />
                 <Stack sx={{ gap: { lg: '35px', xs: '20px' } }}>
                     <Typography variant='h3'>
                         {name}
                         {favouriteChecker(exerciseDetailData.id) ?
-                            <Button onClick={() => dispatch({
-                                type: "REMOVE_FROM_FAVOURITE",
-                                payload: exerciseDetailData
-                            })} sx={{
+                            <Button onClick={() => deleteFavItem(exerciseDetailData)} sx={{
                                 ml: '61px', mt: '11px', color: '#ffffff', background: '#008000',
                                 fontSize: '14px', borderRadius: '20px', textTransform: 'capitalize'
                             }}>
                                 remove from favourites
                             </Button>
-                            : <Button onClick={() => dispatch({
-                                type: "ADD_TO_FAVOURITE",
-                                payload: exerciseDetailData
-                            })} sx={{
+                            : <Button onClick={() => addToFavourite(exerciseDetailData)} sx={{
                                 ml: '61px', mt: '11px', color: '#ffffff', background: '#008000',
                                 fontSize: '14px', borderRadius: '20px', textTransform: 'capitalize'
                             }}>

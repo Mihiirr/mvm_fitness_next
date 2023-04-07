@@ -11,8 +11,19 @@ try {
         password: { type: String, required: true },
         phone: { type: Number },
         isAdmin: { type: Boolean, required: true, default: false },
+        gender: { type: String },
         height: { type: Number },
-        weight: { type: Number }
+        weight: { type: Number },
+        favourites: [
+            {
+                id: String,
+                name: String,
+                bodyPart: String,
+                equipment: String,
+                gifUrl: String,
+                target: String
+            }
+        ]
     }, {
         timestamps: true,
     });
