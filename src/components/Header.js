@@ -12,10 +12,6 @@ const navItems = [
         href: "/home"
     },
     {
-        name: "Exercises",
-        href: "/execises"
-    },
-    {
         name: "Dashboard",
         href: "/dashboard"
     }
