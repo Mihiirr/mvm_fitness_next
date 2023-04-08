@@ -57,7 +57,6 @@ export default function Register() {
         } else {
             try {
                 const response = axios.post('/api/register', data);
-                console.log({ response })
                 if ((await response).data.message) {
                     toast.error(`🤷🏻‍♂️ Uh oh! ${(await response).data.message}`, {
                         position: "bottom-left",

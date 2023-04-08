@@ -46,7 +46,6 @@ const Admin = () => {
                 });
             }
         } catch {
-            console.log("delete hit catch");
             toast.error(`🤷🏻‍♂️ Somthing went wrong! Please try again.`, {
                 position: "bottom-left",
                 autoClose: 3000,

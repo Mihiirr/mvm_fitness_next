@@ -20,7 +20,6 @@ const navItems = [
 const Header = () => {
     const [IsLoggedin, setIsLoggedin] = useState(false);
     const { state, dispatch } = useContext(Context);
-    console.log({ state });
     useEffect(() => {
         const token = localStorage.getItem("auth-token");
         if (!token) {

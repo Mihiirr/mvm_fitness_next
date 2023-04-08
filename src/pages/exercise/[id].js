@@ -39,7 +39,6 @@ const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleEx
                 authorization: `Bearer ${localStorage.getItem("auth-token")}`,
             }
         });
-        console.log({ added: favourites.data })
         await dispatch({
             type: "UPDATE_STATE",
             payload: favourites.data
