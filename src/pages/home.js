@@ -101,11 +101,14 @@ const Home = () => {
                         flexWrap="wrap" justifyContent="center"
                     >
 
-                        {currentExercises.length === 0 ? <Typography variant="h3" mb="46px">
-                            Showing Results
-                        </Typography> : currentExercises.map((exercise) => (
-                            <ExerciseCard key={exercise.id} exercise={exercise} />
-                        ))}
+                        {currentExercises.length === 0 ? (<Typography variant="h3" mb="46px">
+                            Loading...
+                        </Typography>) : <div className={customStyles.exercise_card_home_container}>
+                            {currentExercises.map((exercise) => (
+                                <ExerciseCard exercise={exercise} />
+                            ))}
+                        </div>
+                        }
                     </Stack>
                 ) : <Typography color="red" variant="h3" mb="46px">
                     Somthing went wrong while fetching exercises.

@@ -39,7 +39,6 @@ const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleEx
                 authorization: `Bearer ${localStorage.getItem("auth-token")}`,
             }
         });
-        console.log({ added: favourites.data })
         await dispatch({
             type: "UPDATE_STATE",
             payload: favourites.data
@@ -117,17 +116,15 @@ const ExerciseDetail = ({ exerciseDetailData, exerciseVideosData, targetMuscleEx
                     <Typography variant='h3'>
                         {name}
                         {favouriteChecker(exerciseDetailData.id) ?
-                            <Button onClick={() => deleteFavItem(exerciseDetailData)} sx={{
-                                ml: '61px', mt: '11px', color: '#ffffff', background: '#008000',
-                                fontSize: '14px', borderRadius: '20px', textTransform: 'capitalize'
+                            <Button onClick={() => deleteFavItem(exerciseDetailData)} style={{
+                                width: "230px", marginLeft: "30px", color: "#ffffff", backgroundColor: "#008000", fontSize: "14px", borderRadius: "20px"
                             }}>
-                                remove from favourites
+                                REMOVE FROM FAVOURITE
                             </Button>
-                            : <Button onClick={() => addToFavourite(exerciseDetailData)} sx={{
-                                ml: '61px', mt: '11px', color: '#ffffff', background: '#008000',
-                                fontSize: '14px', borderRadius: '20px', textTransform: 'capitalize'
+                            : <Button onClick={() => addToFavourite(exerciseDetailData)} style={{
+                                width: "200px", marginLeft: "30px", color: "#ffffff", backgroundColor: "#008000", fontSize: "14px", borderRadius: "20px"
                             }}>
-                                Add to favourites
+                                ADD TO FAVOURITE
                             </Button>}
 
                     </Typography>

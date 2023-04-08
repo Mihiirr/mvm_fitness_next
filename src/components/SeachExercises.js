@@ -1,7 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Stack, Typography, CardActionArea } from '@mui/material'
 import { exerciseOptions, fetchData } from '@/utils/fetchData';
 import customStyles from "@/styles/Home.module.css"
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+
+const LeftArrow = () => {
+  const { scrollPrev } = useContext(VisibilityContext);
+
+  return (
+    <Typography onClick={() => scrollPrev()} className={customStyles.right_arrow}>
+      <img src="/icons/left-arrow.png" alt="right-arrow" />
+    </Typography>
+  );
+};
+
+const RightArrow = () => {
+  const { scrollNext } = useContext(VisibilityContext);
+
+  return (
+    <Typography onClick={() => scrollNext()} className={customStyles.left_arrow}>
+      <img src="/icons/right-arrow.png" alt="right-arrow" />
+    </Typography>
+  );
+};
 
 const SearchExercises = ({ setExercises, setBodyPart }) => {
   const [search, setSearch] = useState('')
@@ -32,7 +53,7 @@ const SearchExercises = ({ setExercises, setBodyPart }) => {
   }
   return (
     <Stack alignItems="center" mt="37px"
-      justifyContent="center" p="20px"
+      justifyContent="center"
     >
       <Typography fontWeight={700}
         sx={{ fontSize: { lg: '44px', xs: '30px' } }}
@@ -50,6 +71,8 @@ const SearchExercises = ({ setExercises, setBodyPart }) => {
         />
         <button className={customStyles.home_serachBtn} onClick={handleSearch}>Search</button>
       </Box>
+
+
       <div className={customStyles.home_searchbar_excard_container}>
         {bodyParts.map(item => (
           <div className={customStyles.home_searchbar_excard} onClick={() => setBodyPart(item)}>
@@ -60,7 +83,8 @@ const SearchExercises = ({ setExercises, setBodyPart }) => {
           </div>
         ))}
       </div>
-    </Stack>
+
+    </Stack >
   )
 }
 

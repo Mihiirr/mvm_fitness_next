@@ -13,7 +13,7 @@
 }
 
 .exdetail_similar_excard_container {
-  height: 500px;
+  height: 600px;
   width: 100%;
   padding: 0 40px;
   white-space: nowrap;
@@ -27,7 +27,7 @@
   height: 100%;
   width: 300px;
   border-radius: 8px;
-  margin-right: 200px;
+  margin-right: 120px;
   display: inline-block;
 }
 
