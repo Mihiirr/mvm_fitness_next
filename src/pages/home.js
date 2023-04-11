@@ -67,7 +67,7 @@ const Home = () => {
                     check out the most effective exercises
                 </Typography>
                 <Button variant="contained" href="#exercises" color="error"
-                    sx={{ backgroundColor: '#1E5128', padding: '10px' }}
+                    style={{ backgroundColor: "#1E5128", padding: "10px", color: "#ffffff" }}
                 >Explore Exercises
                 </Button>
                 <Typography fontWeight={600}

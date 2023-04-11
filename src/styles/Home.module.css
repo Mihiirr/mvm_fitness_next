@@ -195,7 +195,6 @@
 .exercise_card_home_container {
   min-height: 800px;
   width: 85%;
-  /* background-color: #1e5128; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
